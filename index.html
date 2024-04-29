@@ -11,20 +11,22 @@
         <!-- Content for your game will be dynamically loaded here -->
     </div>
     <script>
-        // Function to detect the device type and load the appropriate game script
-        function loadGameScript() {
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            const scriptSrc = isMobile ? 'game_mobile.js' : 'game_desktop.js';
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to detect the device type and load the appropriate game script
+            function loadGameScript() {
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                const scriptSrc = isMobile ? 'game_mobile.js' : 'game_desktop.js';
 
-            const scriptElement = document.createElement('script');
-            scriptElement.src = scriptSrc;
-            scriptElement.async = false; // Ensure the script is loaded synchronously
+                const scriptElement = document.createElement('script');
+                scriptElement.src = scriptSrc;
+                scriptElement.async = false; // Ensure the script is loaded synchronously
 
-            document.getElementById('content').appendChild(scriptElement);
-        }
+                document.getElementById('content').appendChild(scriptElement);
+            }
 
-        // Call the function to load the appropriate game script
-        loadGameScript();
+            // Call the function to load the appropriate game script
+            loadGameScript();
+        });
     </script>
 </body>
 </html>
