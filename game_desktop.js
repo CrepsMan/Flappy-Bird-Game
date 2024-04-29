@@ -56,7 +56,6 @@ function startGame() {
     resetGame();
 }
 
-// Function to display scores
 function displayScores() {
     let scoresDisplay = document.getElementById("scoresDisplay");
     if (scoresDisplay) {
@@ -264,12 +263,18 @@ function placePipes() {
 
 // Function to display high scores at the end of the game
 function displayEndScores() {
-    loadHighScores(); // Reload scores in case they were updated during the game
-    document.getElementById("endScreen").style.display = "block"; // Display end screen
-    document.getElementById("gameScreen").style.display = "none"; // Hide game screen
-    document.getElementById("scoresDisplay").style.display = "block"; // Show high scores
-    // Display player's score
-    document.getElementById("finalScore").textContent = score;
+    let endScreen = document.getElementById("endScreen");
+    if (endScreen) {
+        endScreen.style.display = "block";
+        let finalScore = document.getElementById("finalScore");
+        if (finalScore) {
+            finalScore.textContent = score;
+        } else {
+            console.error("Element with ID 'finalScore' not found.");
+        }
+    } else {
+        console.error("Element with ID 'endScreen' not found.");
+    }
 }
 
 // Event listener for spacebar key to make the bird jump
