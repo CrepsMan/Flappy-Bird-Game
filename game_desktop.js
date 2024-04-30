@@ -162,13 +162,13 @@ window.onload = function() {
     // Attempt to retrieve the scoresDisplay element
     const scoresDisplay = document.getElementById('scoresDisplay');
     if (scoresDisplay) {
+        // Ensure that scoresDisplay is not null before accessing its style property
+        scoresDisplay.style.display = "none";
         displayScores(); // Call the displayScores function if the element exists
     } else {
         console.error("Element with ID 'scoresDisplay' not found.");
     }
 }
-
-
 
 let pipeSpawnCounter = 0; // Counter to keep track of pipe spawning
 let pipeSpawnDelay = 100; // Delay between pipe spawns (adjust as needed)
