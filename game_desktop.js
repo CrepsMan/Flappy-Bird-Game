@@ -35,6 +35,9 @@ window.onload = function() {
     // Attach event listener for the "Start Game" button
     document.getElementById("startButton").addEventListener("click", startGame);
 
+    // Attach event listener for the "View High Scores" button
+    document.getElementById("viewScoresButton").addEventListener("click", displayHighScores);
+
     // Get canvas context
     board = document.getElementById("board");
     context = board.getContext("2d");
@@ -83,6 +86,26 @@ function update() {
 function displayEndScores() {
     document.getElementById("endScreen").style.display = "block";
     document.getElementById("finalScore").textContent = score;
+}
+
+// Function to display high scores
+function displayHighScores() {
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("gameScreen").style.display = "none";
+    document.getElementById("endScreen").style.display = "none";
+    document.getElementById("scoresDisplay").style.display = "block";
+    populateHighScores();
+}
+
+// Function to populate high scores
+function populateHighScores() {
+    let highScoresList = document.getElementById("highScoresList");
+    highScoresList.innerHTML = "";
+    highScores.forEach((entry, index) => {
+        let li = document.createElement("li");
+        li.textContent = entry.name + ": " + entry.score;
+        highScoresList.appendChild(li);
+    });
 }
 
 // Other game functions...
@@ -165,38 +188,9 @@ function saveHighScores() {
     localStorage.setItem("highScores", JSON.stringify(highScores));
     console.log("Saved high scores to localStorage.");
 
-    displayScores();
-
     // Reset the game and display start screen
     resetGame();
     document.getElementById("playerName").value = ""; // Clear input field after saving
-    document.getElementById("endScreen").style.display = "none"; // Hide end screen
-    document.getElementById("scoreBoard").style.display = "block"; // Show scoreboard
-    document.getElementById("startScreen").style.display = "flex"; // Show start screen
-    document.getElementById("gameScreen").style.display = "none"; // Hide game screen
-    document.getElementById("endScreen").innerHTML = ""; // Clear end screen content
-
-    console.log("Refreshing webpage after delay...");
-    // Delay before refreshing the webpage
-    setTimeout(() => {
-        location.reload(); // Refresh the webpage after a delay
-    }, 1000); // Adjust the delay time as needed (in milliseconds)
-}
-
-// Function to display high scores
-function displayScores() {
-    let scoresDisplay = document.getElementById("scoresDisplay");
-    if (scoresDisplay) {
-        scoresDisplay.style.display = "block";
-        scoresDisplay.innerHTML = "";
-        highScores.forEach((entry, index) => {
-            let li = document.createElement("li");
-            li.textContent = entry.name + ": " + entry.score;
-            scoresDisplay.appendChild(li);
-        });
-    } else {
-        console.error("Element with ID 'scoresDisplay' not found.");
-    }
 }
 
 // Function to load high scores
@@ -205,5 +199,4 @@ function loadHighScores() {
     if (storedScores) {
         highScores = JSON.parse(storedScores);
     }
-    displayScores(); // Call displayScores after loading high scores
 }
