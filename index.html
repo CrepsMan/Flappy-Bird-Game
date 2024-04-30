@@ -13,15 +13,14 @@
     <div id="scoresDisplay" style="display: none;"></div> <!-- Ensure scoresDisplay element is defined -->
     <script src="game_desktop.js"></script>
     <script>
-        // Function to detect the device type and load the appropriate game script
         function loadGameScript() {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             const scriptSrc = isMobile ? 'game_mobile.js' : 'game_desktop.js';
-
+        
             const scriptElement = document.createElement('script');
             scriptElement.src = scriptSrc;
             scriptElement.async = false; // Ensure the script is loaded synchronously
-
+        
             document.getElementById('content').appendChild(scriptElement);
         }
 
