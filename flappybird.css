@@ -2,60 +2,32 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: black;
-    text-align: center;
-    color: white;
 }
 
-#startScreen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 20vh;
-}
-
-#startButton {
-    font-size: 18px; /* Added "px" for font size */
-    cursor: pointer;
-}
-
-#gameScreen {
+#startScreen, #gameScreen, #endScreen {
     display: none;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-/* Center the game canvas */
-#board {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+canvas {
+    border: 1px solid #000;
 }
 
-/* Center the scores */
-#scoresDisplay {
-    list-style-type: none;
-    text-align: center;
-}
-
-#endScreen {
-    display: none;
-    text-align: center;
-}
-
-h3 {
-    display: none; /* Hide "High Scores" text during gameplay */
-}
-
-/* Add hover effect to buttons */
 button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #2ecc71; /* Change button color on hover */
+input[type="text"] {
+    padding: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+#scoreBoard {
+    display: none;
 }

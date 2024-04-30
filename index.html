@@ -4,39 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird</title>
-    <link rel="stylesheet" href="flappybird.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="content">
-        <!-- Content for your game will be dynamically loaded here -->
+    <div id="startScreen">
+        <h1>Welcome to Flappy Bird</h1>
+        <button id="startButton">Start Game</button>
     </div>
-    <div id="scoresDisplay" style="display: none;"></div> <!-- Ensure scoresDisplay element is defined -->
-    <script src="game_desktop.js"></script>
-    <script>
-        function loadGameScript() {
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            const scriptSrc = isMobile ? 'game_mobile.js' : 'game_desktop.js';
-        
-            const scriptElement = document.createElement('script');
-            scriptElement.src = scriptSrc;
-            scriptElement.async = false; // Ensure the script is loaded synchronously
-        
-            document.getElementById('content').appendChild(scriptElement);
-        }
-
-        // Wait for the DOM to be fully loaded before loading the game script
-        document.addEventListener("DOMContentLoaded", function() {
-            loadGameScript();
-        });
-
-        window.onload = function() {
-            const scoresDisplay = document.getElementById('scoresDisplay');
-            if (scoresDisplay) {
-                displayScores(); // Call the displayScores function if the element exists
-            } else {
-                console.error("Element with ID 'scoresDisplay' not found.");
-            }
-        };
-    </script>
+    <div id="gameScreen">
+        <canvas id="board"></canvas>
+        <div id="scoreBoard">
+            <h2>Scores</h2>
+            <ul id="scoresDisplay"></ul>
+            <input type="text" id="playerName" placeholder="Enter your name">
+            <button id="saveButton">Save</button>
+        </div>
+    </div>
+    <div id="endScreen">
+        <h1>Game Over</h1>
+        <p>Your Score: <span id="finalScore">0</span></p>
+    </div>
+    <script src="game.js"></script>
 </body>
 </html>
