@@ -135,17 +135,6 @@ window.onload = function() {
     document.getElementById("endScreen").style.display = "none"; // Hide end screen
     document.getElementById("scoreBoard").style.display = "block"; // Display high scores
 
-    // Ensure scoresDisplay element is defined
-    const scoresDisplay = document.getElementById('scoresDisplay');
-    if (scoresDisplay) {
-        displayScores(); // Call the displayScores function if the element exists
-    } else {
-        console.error("Element with ID 'scoresDisplay' not found.");
-    }
-
-    // Add event listener for the save button
-    document.getElementById("saveButton").addEventListener("click", saveHighScores);
-
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
@@ -169,7 +158,16 @@ window.onload = function() {
     // Add event listener for "Start Game" button click
     document.getElementById("startButton").addEventListener("click", startGame);
     document.addEventListener("keydown", moveBird);
+
+    // Attempt to retrieve the scoresDisplay element
+    const scoresDisplay = document.getElementById('scoresDisplay');
+    if (scoresDisplay) {
+        displayScores(); // Call the displayScores function if the element exists
+    } else {
+        console.error("Element with ID 'scoresDisplay' not found.");
+    }
 }
+
 
 
 let pipeSpawnCounter = 0; // Counter to keep track of pipe spawning
