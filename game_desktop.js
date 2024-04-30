@@ -29,6 +29,9 @@ bottomPipeImg.src = "./bottompipe.png";
 
 // Event listeners
 window.onload = function() {
+    // Load high scores
+    loadHighScores();
+
     // Attach event listener for the "Start Game" button
     document.getElementById("startButton").addEventListener("click", startGame);
 
@@ -49,14 +52,12 @@ window.onload = function() {
     };
 };
 
-// Start the game
 function startGame() {
     console.log("Game started");
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameScreen").style.display = "block";
     resetGame();
 }
-
 
 // Reset the game
 function resetGame() {
