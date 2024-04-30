@@ -3,26 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird</title>
+    <title>Flappy Bird Game</title>
     <link rel="stylesheet" href="flappybird.css">
 </head>
 <body>
     <div id="startScreen">
-        <h1>Welcome to Flappy Bird</h1>
+        <!-- Start screen content here -->
         <button id="startButton">Start Game</button>
     </div>
     <div id="gameScreen" style="display: none;">
-        <canvas id="board"></canvas>
-        <div id="scoreBoard">
-            <h2>Scores</h2>
-            <ul id="scoresDisplay"></ul>
-            <input type="text" id="playerName" placeholder="Enter your name">
-            <button id="saveButton">Save</button>
-        </div>
+        <!-- Game screen content here -->
+        <canvas id="board" width="360" height="640"></canvas>
     </div>
     <div id="endScreen" style="display: none;">
-        <h1>Game Over</h1>
-        <p>Your Score: <span id="finalScore">0</span></p>
+        <!-- End screen content here -->
+        <p>Game Over</p>
+        <p>Final Score: <span id="finalScore"></span></p>
     </div>
     <script src="game_desktop.js"></script>
 </body>
