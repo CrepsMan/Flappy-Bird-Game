@@ -28,6 +28,14 @@
         document.addEventListener("DOMContentLoaded", function() {
             loadGameScript();
         });
+
+        // Ensure the scoresDisplay element exists before accessing its style property
+        window.onload = function() {
+            const scoresDisplay = document.getElementById('scoresDisplay');
+            if (scoresDisplay) {
+                scoresDisplay.style.display = 'block';
+            }
+        };
     </script>
 </body>
 </html>
