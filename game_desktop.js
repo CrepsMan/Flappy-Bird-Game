@@ -1,4 +1,7 @@
-let highScores = [];
+// Constants for different device types
+const isMobile = false;
+
+let highScores = []; // Declare highScores only once
 
 //board
 let board;
@@ -18,7 +21,7 @@ let bird = {
     y: birdY,
     width: birdWidth,
     height: birdHeight
-}
+};
 
 //pipes
 let pipeArray = [];
@@ -37,28 +40,6 @@ let gravity = 0.4;
 
 let gameOver = false;
 let score = 0;
-
-function setupBoard() {
-    board = document.getElementById("board");
-    board.height = boardHeight;
-    board.width = boardWidth;
-    context = board.getContext("2d");
-
-    // Load bird image
-    birdImg = new Image();
-    birdImg.onload = function() {
-        context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-    }
-    birdImg.src = "./flappybird.png";
-
-    // Load top pipe image
-    topPipeImg = new Image();
-    topPipeImg.src = "./toppipe.png";
-
-    // Load bottom pipe image
-    bottomPipeImg = new Image();
-    bottomPipeImg.src = "./bottompipe.png";
-}
 
 // Function to start the game
 function startGame() {
@@ -148,7 +129,6 @@ function loadHighScores() {
 }
 
 window.onload = function() {
-    setupBoard(); // Setup the board and load images
     loadHighScores(); // Load scores from local storage or server when the page loads
     document.getElementById("startScreen").style.display = "block"; // Display start screen
     document.getElementById("gameScreen").style.display = "none"; // Hide game screen
@@ -156,10 +136,31 @@ window.onload = function() {
     document.getElementById("scoreBoard").style.display = "block"; // Display high scores
     // Add event listener for the save button
     document.getElementById("saveButton").addEventListener("click", saveHighScores);
+
+    board = document.getElementById("board");
+    board.height = boardHeight;
+    board.width = boardWidth;
+    context = board.getContext("2d");
+
+    // Load bird image
+    birdImg = new Image();
+    birdImg.onload = function() {
+        context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+    };
+    birdImg.src = "./flappybird.png";
+
+    // Load top pipe image
+    topPipeImg = new Image();
+    topPipeImg.src = "./toppipe.png";
+
+    // Load bottom pipe image
+    bottomPipeImg = new Image();
+    bottomPipeImg.src = "./bottompipe.png";
+
     // Add event listener for "Start Game" button click
     document.getElementById("startButton").addEventListener("click", startGame);
     document.addEventListener("keydown", moveBird);
-}
+};
 
 let pipeSpawnCounter = 0; // Counter to keep track of pipe spawning
 let pipeSpawnDelay = 100; // Delay between pipe spawns (adjust as needed)
@@ -246,7 +247,7 @@ function placePipes() {
         width: pipeWidth,
         height: pipeHeight,
         passed: false
-    }
+    };
     pipeArray.push(topPipe);
 
     let bottomPipe = {
@@ -256,7 +257,7 @@ function placePipes() {
         width: pipeWidth,
         height: pipeHeight,
         passed: false
-    }
+    };
     pipeArray.push(bottomPipe);
 }
 
