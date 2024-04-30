@@ -38,6 +38,17 @@ let gravity = 0.4;
 let gameOver = false;
 let score = 0;
 
+function loadGameScript() {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const scriptSrc = isMobile ? 'game_mobile.js' : 'game_desktop.js';
+
+    const scriptElement = document.createElement('script');
+    scriptElement.src = scriptSrc;
+    scriptElement.async = false; // Ensure the script is loaded synchronously
+
+    document.getElementById('content').appendChild(scriptElement);
+}
+
 function setupBoard() {
     board = document.getElementById("board");
     board.height = boardHeight;
