@@ -134,6 +134,15 @@ window.onload = function() {
     document.getElementById("gameScreen").style.display = "none"; // Hide game screen
     document.getElementById("endScreen").style.display = "none"; // Hide end screen
     document.getElementById("scoreBoard").style.display = "block"; // Display high scores
+
+    // Ensure scoresDisplay element is defined
+    const scoresDisplay = document.getElementById('scoresDisplay');
+    if (scoresDisplay) {
+        displayScores(); // Call the displayScores function if the element exists
+    } else {
+        console.error("Element with ID 'scoresDisplay' not found.");
+    }
+
     // Add event listener for the save button
     document.getElementById("saveButton").addEventListener("click", saveHighScores);
 
@@ -161,6 +170,7 @@ window.onload = function() {
     document.getElementById("startButton").addEventListener("click", startGame);
     document.addEventListener("keydown", moveBird);
 }
+
 
 let pipeSpawnCounter = 0; // Counter to keep track of pipe spawning
 let pipeSpawnDelay = 100; // Delay between pipe spawns (adjust as needed)
