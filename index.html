@@ -11,9 +11,10 @@
         <!-- Content for your game will be dynamically loaded here -->
     </div>
     <div id="scoresDisplay" style="display: none;"></div> <!-- Ensure scoresDisplay element is defined -->
+    <script src="game_desktop.js"></script>
     <script>
         // Function to detect the device type and load the appropriate game script
-        function loadGameScript(callback) {
+        function loadGameScript() {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             const scriptSrc = isMobile ? 'game_mobile.js' : 'game_desktop.js';
 
@@ -21,28 +22,22 @@
             scriptElement.src = scriptSrc;
             scriptElement.async = false; // Ensure the script is loaded synchronously
 
-            // Execute the callback function after the script is loaded
-            scriptElement.onload = callback;
-
             document.getElementById('content').appendChild(scriptElement);
-        }
-
-        // Function to display scores
-        function displayScores() {
-            const scoresDisplay = document.getElementById('scoresDisplay');
-            if (scoresDisplay) {
-                scoresDisplay.style.display = 'block';
-                // Your displayScores function logic here...
-            } else {
-                console.error("Element with ID 'scoresDisplay' not found.");
-            }
         }
 
         // Wait for the DOM to be fully loaded before loading the game script
         document.addEventListener("DOMContentLoaded", function() {
-            // Load the game script and execute displayScores function after it's loaded
-            loadGameScript(displayScores);
+            loadGameScript();
         });
+
+        window.onload = function() {
+            const scoresDisplay = document.getElementById('scoresDisplay');
+            if (scoresDisplay) {
+                displayScores(); // Call the displayScores function if the element exists
+            } else {
+                console.error("Element with ID 'scoresDisplay' not found.");
+            }
+        };
     </script>
 </body>
 </html>
