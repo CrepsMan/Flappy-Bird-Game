@@ -1,7 +1,8 @@
 // Constants for different device types
 const isMobile = false;
 
-let highScores = []; // Declare highScores only once
+// Declare highScores only once
+let highScores = [];
 
 //board
 let board;
