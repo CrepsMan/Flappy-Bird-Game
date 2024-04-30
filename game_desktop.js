@@ -115,6 +115,7 @@ window.onload = function() {
     document.getElementById("endScreen").style.display = "none";
     document.getElementById("scoreBoard").style.display = "block";
     document.getElementById("saveButton").addEventListener("click", saveHighScores);
+    document.getElementById("startButton").addEventListener("click", startGame);
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
