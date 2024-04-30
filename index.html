@@ -29,13 +29,15 @@
             loadGameScript();
         });
 
-        // Ensure the scoresDisplay element exists before accessing its style property
         window.onload = function() {
             const scoresDisplay = document.getElementById('scoresDisplay');
             if (scoresDisplay) {
                 scoresDisplay.style.display = 'block';
+            } else {
+                console.error("Element with ID 'scoresDisplay' not found.");
             }
         };
+        
     </script>
 </body>
 </html>
