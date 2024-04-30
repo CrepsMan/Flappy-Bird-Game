@@ -1,6 +1,3 @@
-// Constants for different device types
-const isMobile = false;
-
 let highScores = [];
 
 //board
