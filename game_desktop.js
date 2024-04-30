@@ -160,6 +160,7 @@ window.onload = function() {
     document.addEventListener("keydown", moveBird);
 
     const scoresDisplay = document.getElementById('scoresDisplay');
+    console.log(scoresDisplay); // Log the scoresDisplay element
     if (scoresDisplay) {
         displayScores(); // Call the displayScores function if the element exists
     } else {
