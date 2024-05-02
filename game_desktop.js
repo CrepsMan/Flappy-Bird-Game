@@ -56,7 +56,6 @@ function startGame() {
     console.log("Game started");
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameScreen").style.display = "block";
-    resetGame();
 }
 
 // Reset the game

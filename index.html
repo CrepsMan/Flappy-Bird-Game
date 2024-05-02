@@ -8,30 +8,21 @@
 </head>
 <body>
     <div id="startScreen">
-        <!-- Heading -->
         <h1>Welcome to Flappy Bird</h1>
-        <!-- Start button -->
         <button id="startButton">Start Game</button>
     </div>
     <div id="gameScreen" style="display: none;">
-        <!-- Canvas for the game -->
         <canvas id="board" width="360" height="640"></canvas>
     </div>
     <div id="endScreen" style="display: none;">
-        <!-- Game Over screen -->
         <p>Game Over</p>
         <p>Final Score: <span id="finalScore"></span></p>
     </div>
-    <!-- Button to view high scores -->
     <button id="viewScoresButton">View High Scores</button>
-
-    <!-- Scores display -->
     <div id="scoresDisplay" style="display: none;">
-        <!-- High scores list -->
         <h2>High Scores</h2>
         <ul id="highScoresList"></ul>
     </div>
-
     <script src="game_desktop.js"></script>
 </body>
 </html>
