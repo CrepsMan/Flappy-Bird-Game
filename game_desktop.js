@@ -129,38 +129,39 @@ function loadHighScores() {
     displayScores(); // Call displayScores after loading high scores
 }
 
-// Function to handle bird jumping
-function jump() {
-    if (!gameOver) {
-        velocityY = -6; // Adjusted jump velocity
-    } else {
-        resetGame(); // Reset the game after game over
-    }
-}
+window.onload = function() {
+    loadHighScores(); // Load scores from local storage or server when the page loads
+    document.getElementById("startScreen").style.display = "block"; // Display start screen
+    document.getElementById("gameScreen").style.display = "none"; // Hide game screen
+    document.getElementById("endScreen").style.display = "none"; // Hide end screen
+    document.getElementById("scoreBoard").style.display = "block"; // Display high scores
+    // Add event listener for the save button
+    document.getElementById("saveButton").addEventListener("click", saveHighScores);
 
-// Event listener for spacebar key to make the bird jump
-function moveBird(event) {
-    console.log("Key pressed: " + event.code);
-    if (event.code === "Space") { // Only respond to spacebar key
-        if (!gameOver) {
-            jump();
-        }
-    }
-}
+    board = document.getElementById("board");
+    board.height = boardHeight;
+    board.width = boardWidth;
+    context = board.getContext("2d");
 
-// Event listener for touch input to make the bird jump
-function moveBirdTouch(e) {
-    e.preventDefault(); // Prevent default touch behavior (like scrolling)
-    jump();
-}
+    // Load bird image
+    birdImg = new Image();
+    birdImg.onload = function() {
+        context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+    };
+    birdImg.src = "./flappybird.png";
 
-// Function to detect collision between two objects
-function detectCollision(a, b) {
-    return a.x < b.x + b.width &&
-        a.x + a.width > b.x &&
-        a.y < b.y + b.height &&
-        a.y + a.height > b.y;
-}
+    // Load top pipe image
+    topPipeImg = new Image();
+    topPipeImg.src = "./toppipe.png";
+
+    // Load bottom pipe image
+    bottomPipeImg = new Image();
+    bottomPipeImg.src = "./bottompipe.png";
+
+    // Add event listener for "Start Game" button click
+    document.getElementById("startButton").addEventListener("click", startGame);
+    document.addEventListener("keydown", moveBird);
+};
 
 let pipeSpawnCounter = 0; // Counter to keep track of pipe spawning
 let pipeSpawnDelay = 100; // Delay between pipe spawns (adjust as needed)
@@ -277,22 +278,35 @@ function displayEndScores() {
     }
 }
 
-// Function to display high scores
-function showHighScores() {
-    document.getElementById("startScreen").style.display = "none";
-    document.getElementById("gameScreen").style.display = "none";
-    document.getElementById("endScreen").style.display = "none";
-    document.getElementById("scoresDisplay").style.display = "block";
+// Event listener for spacebar key to make the bird jump
+function moveBird(event) {
+    console.log("Key pressed: " + event.code);
+    if (event.code === "Space") { // Only respond to spacebar key
+        if (!gameOver) {
+            jump();
+        }
+    }
 }
 
-// Function to hide high scores
-function hideHighScores() {
-    document.getElementById("scoresDisplay").style.display = "none";
-    document.getElementById("startScreen").style.display = "block";
+// Event listener for touch input to make the bird jump
+function moveBirdTouch(e) {
+    e.preventDefault(); // Prevent default touch behavior (like scrolling)
+    jump();
 }
 
-// Load high scores when the page loads
-window.onload = loadHighScores;
+// Function to handle bird jumping
+function jump() {
+    if (!gameOver) {
+        velocityY = -6; // Adjusted jump velocity
+    } else {
+        resetGame(); // Reset the game after game over
+    }
+}
 
-// Add event listeners for saving high scores
-document.getElementById("saveButton").addEventListener("click", saveHighScores);
+// Function to detect collision between two objects
+function detectCollision(a, b) {
+    return a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y;
+}
