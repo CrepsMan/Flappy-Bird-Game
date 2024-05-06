@@ -72,7 +72,12 @@ function initializeGame() {
     document.getElementById("startButton").addEventListener("click", startGame);
 
     // Add event listener for "Show High Scores" button click
-    document.getElementById("showScoresButton").addEventListener("click", displayScores);
+    const showScoresButton = document.getElementById("showScoresButton");
+    if (showScoresButton) {
+        showScoresButton.addEventListener("click", toggleScoresDisplay);
+    } else {
+        console.error("Element with ID 'showScoresButton' not found.");
+    }
 
     // Ensure the start screen is displayed
     document.getElementById("startScreen").style.display = "flex";
@@ -96,6 +101,25 @@ function startGame() {
     resetGame();
 }
 
+// Function to toggle the visibility of high scores display
+function toggleScoresDisplay() {
+    const scoresDisplay = document.getElementById("scoresDisplay");
+    if (scoresDisplay) {
+        const displayStyle = scoresDisplay.style.display;
+        scoresDisplay.style.display = displayStyle === "none" ? "block" : "none";
+        const showScoresButton = document.getElementById("showScoresButton");
+        if (showScoresButton) {
+            showScoresButton.textContent = displayStyle === "none" ? "Hide High Scores" : "Show High Scores";
+        }
+    } else {
+        console.error("Element with ID 'scoresDisplay' not found.");
+    }
+}
+
+// Initialize the game when the window loads
+window.onload = initializeGame;
+
+
 // Function to display high scores
 function displayScores() {
     const scoresDisplay = document.getElementById("scoresDisplay");
@@ -111,9 +135,6 @@ function displayScores() {
         console.error("Element with ID 'scoresDisplay' not found.");
     }
 }
-
-// Initialize the game when the window loads
-window.onload = initializeGame;
 
 // Function to reset the game
 function resetGame() {
