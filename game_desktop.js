@@ -71,16 +71,15 @@ function initializeGame() {
     // Add event listener for "Start Game" button click
     document.getElementById("startButton").addEventListener("click", startGame);
 
+    // Add event listener for "Show High Scores" button click
+    document.getElementById("showScoresButton").addEventListener("click", displayScores);
+
     // Ensure the start screen is displayed
     document.getElementById("startScreen").style.display = "flex";
     document.getElementById("gameScreen").style.display = "none";
     document.getElementById("endScreen").style.display = "none";
     document.getElementById("scoresDisplay").style.display = "none"; // Ensure high scores are hidden initially
 }
-
-// Initialize the game when the window loads
-window.onload = initializeGame;
-
 
 // Function to start the game
 function startGame() {
@@ -112,6 +111,9 @@ function displayScores() {
         console.error("Element with ID 'scoresDisplay' not found.");
     }
 }
+
+// Initialize the game when the window loads
+window.onload = initializeGame;
 
 // Function to reset the game
 function resetGame() {
