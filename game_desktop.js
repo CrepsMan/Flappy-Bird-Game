@@ -96,14 +96,23 @@ function startGame() {
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameScreen").style.display = "block";
     document.getElementById("scoreBoard").style.display = "none"; // Hide high scores
-    document.getElementById("board").style.backgroundImage = "url('flappybirdbg.png')"; // Show game background
-    document.removeEventListener("keydown", moveBird); // Remove existing event listeners
-    document.getElementById("board").removeEventListener("touchstart", moveBirdTouch);
-    document.addEventListener("keydown", moveBird);
-    document.getElementById("board").addEventListener("touchstart", moveBirdTouch);
     // Initialize game state without instantly transitioning to game over screen
     resetGame();
+
+    // Load background image
+    const backgroundImage = new Image();
+    backgroundImage.onload = function() {
+        // Set the background image once it's loaded
+        document.getElementById("board").style.backgroundImage = "url('flappybirdbg.png')"; 
+        // Add event listeners after loading the background image
+        document.removeEventListener("keydown", moveBird); // Remove existing event listeners
+        document.getElementById("board").removeEventListener("touchstart", moveBirdTouch);
+        document.addEventListener("keydown", moveBird);
+        document.getElementById("board").addEventListener("touchstart", moveBirdTouch);
+    };
+    backgroundImage.src = "./flappybirdbg.png";
 }
+
 
 // Function to toggle the visibility of high scores display
 function toggleScoresDisplay() {
@@ -194,13 +203,18 @@ function loadHighScores() {
     displayScores(); // Call displayScores after loading high scores
 }
 
-// Event listener for spacebar key to make the bird jump
+// Event listener for spacebar key to make the bird jump and start the game
 function moveBird(event) {
     console.log("Key pressed: " + event.code);
-    if (event.code === "Space" && !gameOver) { // Only respond to spacebar key
-        jump();
+    if (event.code === "Space") { // Only respond to spacebar key
+        if (gameOver) {
+            restartGame(); // Restart the game if it's over
+        } else {
+            jump(); // Otherwise, make the bird jump
+        }
     }
 }
+
 
 
 // Event listener for touch input to make the bird jump
