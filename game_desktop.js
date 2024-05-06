@@ -34,6 +34,10 @@ const gravity = 0.4;
 let gameOver = false;
 let score = 0;
 
+// Pipe spawn variables
+let pipeSpawnCounter = 0;
+const pipeSpawnDelay = 120; // Adjust as needed
+
 // Function to initialize the game
 function initializeGame() {
     // Load high scores
@@ -197,6 +201,7 @@ function moveBird(event) {
         jump();
     }
 }
+
 
 // Event listener for touch input to make the bird jump
 function moveBirdTouch(e) {
