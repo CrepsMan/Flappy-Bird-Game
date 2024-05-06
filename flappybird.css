@@ -8,7 +8,7 @@ body {
     display: none;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    
 }
 
 canvas {
@@ -34,8 +34,8 @@ input[type="text"] {
 
 #scoresDisplay {
     position: absolute;
-    top: 50%;
     left: 50%;
+    top:20%;
     transform: translate(-50%, -50%);
     z-index: 1; /* Ensure high scores display is above other elements */
     text-align: center;
