@@ -4,8 +4,9 @@ const fs = require('fs');
 const app = express();
 
 app.post('/saveScores', (req, res) => {
-    const newScore = req.body.score;
-    fs.appendFileSync('scores.txt', newScore + '\n');
+    const { name, score } = req.body;
+    const entry = `${name}: ${score}`;
+    fs.appendFileSync('scores.txt', entry + '\n');
     res.sendStatus(200);
 });
 
@@ -17,3 +18,4 @@ app.get('/loadScores', (req, res) => {
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
+

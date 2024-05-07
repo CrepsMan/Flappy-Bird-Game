@@ -72,6 +72,16 @@ function initializeGame() {
 
     // Add event listener for "Start Game" button click
     document.getElementById("startButton").addEventListener("click", startGame);
+    // Ensure the start screen is displayed
+    document.getElementById("startScreen").style.display = "flex";
+    document.getElementById("gameScreen").style.display = "none";
+    document.getElementById("endScreen").style.display = "none";
+    document.getElementById("scoresDisplay").style.display = "none"; // Ensure high scores are hidden initially
+    document.getElementById("gameOverScreen").style.display = "none";
+    document.getElementById('saveScoreButton').addEventListener('click', saveScoresToServer);
+    document.getElementById('showScoresButton').addEventListener('click', toggleScoresDisplay);
+    document.getElementById('resetGameButton').addEventListener('click', resetGame);
+
 
     // Add event listener for "Show High Scores" button click
     const showScoresButton = document.getElementById("showScoresButton");
@@ -81,15 +91,23 @@ function initializeGame() {
         console.error("Element with ID 'showScoresButton' not found.");
     }
 
-    // Ensure the start screen is displayed
-    document.getElementById("startScreen").style.display = "flex";
-    document.getElementById("gameScreen").style.display = "none";
-    document.getElementById("endScreen").style.display = "none";
-    document.getElementById("scoresDisplay").style.display = "none"; // Ensure high scores are hidden initially
-    document.getElementById("gameOverScreen").style.display = "none";
+    
 }
 
-
+// Function to reset the game
+function resetGame() {
+    bird.y = birdY;
+    pipeArray = [];
+    score = 0;
+    gameOver = false;
+    velocityY = 0; // Reset jump velocity
+    requestAnimationFrame(update);
+    document.removeEventListener("keydown", moveBird);
+    document.getElementById("board").removeEventListener("touchstart", moveBirdTouch);
+    document.addEventListener("keydown", moveBird);
+    document.getElementById("board").addEventListener("touchstart", moveBirdTouch);
+    displayScores(); // Display high scores at the start of the game
+}
 
 // Function to start the game
 function startGame() {
@@ -164,13 +182,6 @@ function moveBirdTouch(e) {
     e.preventDefault(); // Prevent default touch behavior (like scrolling)
     jump();
 }
-// Function to render the bird on the canvas
-function renderBird() {
-    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-}
-
-
-
 
 // Function to toggle the visibility of high scores display
 function toggleScoresDisplay() {
@@ -190,14 +201,19 @@ function toggleScoresDisplay() {
 // Initialize the game when the window loads
 window.onload = initializeGame;
 
-
-// Function to display high scores
 function displayScores() {
     const scoresDisplay = document.getElementById("scoresDisplay");
     if (scoresDisplay) {
         scoresDisplay.style.display = "block";
         scoresDisplay.innerHTML = "";
-        highScores.forEach((entry, index) => {
+
+        // Sort scores in descending order
+        highScores.sort((a, b) => b.score - a.score);
+
+        // Display only the top 10 scores
+        const topScores = highScores.slice(0, 10);
+
+        topScores.forEach((entry, index) => {
             const li = document.createElement("li");
             li.textContent = entry.name + ": " + entry.score;
             scoresDisplay.appendChild(li);
@@ -207,35 +223,50 @@ function displayScores() {
     }
 }
 
-// Function to reset the game
-function resetGame() {
-    bird.y = birdY;
-    pipeArray = [];
-    score = 0;
-    gameOver = false;
-    velocityY = 0; // Reset jump velocity
-    requestAnimationFrame(update);
-    document.removeEventListener("keydown", moveBird);
-    document.getElementById("board").removeEventListener("touchstart", moveBirdTouch);
-    document.addEventListener("keydown", moveBird);
-    document.getElementById("board").addEventListener("touchstart", moveBirdTouch);
-    displayScores(); // Display high scores at the start of the game
+
+function saveScoresToServer(name, score) {
+    fetch('http://localhost:3000/saveScores', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: name, score: score }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to save score');
+        }
+        console.log('Score saved successfully');
+    })
+    .catch(error => {
+        console.error('Error saving score:', error);
+    });
 }
 
-// Function to save high scores to server
-function saveHighScoresToServer() {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:3000/saveScores');
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            console.log('Scores saved successfully.');
-        } else {
-            console.error('Failed to save scores.');
+
+
+// Function to load scores from the backend server
+function loadScoresFromServer() {
+    fetch('http://localhost:3000/loadScores')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to load scores');
         }
-    };
-    xhr.send(JSON.stringify(highScores));
+        return response.json();
+    })
+    .then(scores => {
+        console.log('Scores loaded successfully:', scores);
+        // Handle loading scores into your game interface
+    })
+    .catch(error => {
+        console.error('Error loading scores:', error);
+    });
 }
+
+// Example usage:
+// Call saveScoresToServer(score) when you want to save a score
+// Call loadScoresFromServer() when you want to load scores
+
 
 // Event listener for the save score button
 document.getElementById('saveScoreButton').addEventListener('click', saveHighScoresToServer);
@@ -250,6 +281,21 @@ function loadHighScores() {
     displayScores(); // Call displayScores after loading high scores
 }
 
+// Function to toggle the visibility of high scores display
+function toggleScoresDisplay() {
+    const scoresDisplay = document.getElementById("scoresDisplay");
+    if (scoresDisplay) {
+        const displayStyle = scoresDisplay.style.display;
+        scoresDisplay.style.display = displayStyle === "none" ? "block" : "none";
+        const showScoresButton = document.getElementById("showScoresButton");
+        if (showScoresButton) {
+            showScoresButton.textContent = displayStyle === "none" ? "Hide High Scores" : "Show High Scores";
+        }
+    } else {
+        console.error("Element with ID 'scoresDisplay' not found.");
+    }
+}
+
 // Event listener for spacebar key to make the bird jump and start the game
 function moveBird(event) {
     console.log("Key pressed: " + event.code);
@@ -261,8 +307,6 @@ function moveBird(event) {
         }
     }
 }
-
-
 
 // Event listener for touch input to make the bird jump
 function moveBirdTouch(e) {
@@ -286,6 +330,7 @@ function detectCollision(a, b) {
         a.y < b.y + b.height &&
         a.y + a.height > b.y;
 }
+
 // Function to update game state
 function update() {
     console.log("update function called");
@@ -351,7 +396,6 @@ function update() {
     }
 }
 
-
 // Function to display high scores at the end of the game
 function displayEndScores() {
     const endScreen = document.getElementById("endScreen");
@@ -363,10 +407,16 @@ function displayEndScores() {
         } else {
             console.error("Element with ID 'finalScore' not found.");
         }
+        
+        // Remove background image
+        document.getElementById("board").style.backgroundImage = "none";
+        context.clearRect(0, 0, board.width, board.height);
+
     } else {
         console.error("Element with ID 'endScreen' not found.");
     }
 }
+
 
 // Function to restart the game
 function restartGame() {
