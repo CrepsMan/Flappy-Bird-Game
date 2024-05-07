@@ -18,10 +18,27 @@
         <canvas id="board" width="360" height="640"></canvas>
     </div>
 
-    <div id="endScreen" style="display: none;">
-        <p>Game Over</p>
-        <p>Final Score: <span id="finalScore"></span></p>
+
+    <div id="gameOverScreen" class="hidden">
+        <h1>Game Over</h1>
+        <p>Your Score: <span id="finalScore">0</span></p>
+        <button id="restartButton">Restart</button>
+        <button id="saveScoreButton">Save Score</button>
+        <button id="showScoresButton">Show High Scores</button>
     </div>
+    
+    
+    
+    
+    <div id="scoreBoard" class="hidden">
+        <span id="score">0</span>
+    </div>
+    
+
+    <div id="endScreen" style="display: none;">
+        
+    </div>
+
 
     <div id="scoresDisplay" style="display: none;">
         <!-- High scores list -->

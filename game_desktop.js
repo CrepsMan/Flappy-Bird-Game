@@ -1,6 +1,3 @@
-// Constants for different device types
-const isMobile = false;
-
 // Declare highScores only once
 let highScores = [];
 
@@ -15,7 +12,7 @@ const birdWidth = 34; // width/height ratio = 17/12
 const birdHeight = 24;
 const birdX = boardWidth / 8;
 const birdY = boardHeight / 2;
-let bird;
+let birdImg; // Define birdImg in the outer scope
 
 // Pipes
 let pipeArray = [];
@@ -38,6 +35,7 @@ let score = 0;
 let pipeSpawnCounter = 0;
 const pipeSpawnDelay = 120; // Adjust as needed
 
+
 // Function to initialize the game
 function initializeGame() {
     // Load high scores
@@ -58,7 +56,7 @@ function initializeGame() {
     };
 
     // Load bird image
-    const birdImg = new Image();
+    birdImg = new Image(); // Define birdImg here
     birdImg.onload = function() {
         context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
     };
@@ -88,22 +86,37 @@ function initializeGame() {
     document.getElementById("gameScreen").style.display = "none";
     document.getElementById("endScreen").style.display = "none";
     document.getElementById("scoresDisplay").style.display = "none"; // Ensure high scores are hidden initially
+    document.getElementById("gameOverScreen").style.display = "none";
 }
+
+
 
 // Function to start the game
 function startGame() {
+    // Initialize game state without instantly transitioning to game over screen
+    resetGame(); 
+    console.log("startGame() called");
+    const startScreen = document.getElementById("startScreen");
+    if (!startScreen) {
+        console.error("Start screen element not found.");
+        return;
+    }
+
+    startScreen.style.display = "none";
     console.log("startGame() called");
     document.getElementById("startScreen").style.display = "none";
     document.getElementById("gameScreen").style.display = "block";
-    document.getElementById("scoreBoard").style.display = "none"; // Hide high scores
-    // Initialize game state without instantly transitioning to game over screen
-    resetGame();
+    document.getElementById("endScreen").style.display = "none";
+
+    
+    // Hide scores display when starting the game
+    document.getElementById("scoresDisplay").style.display = "none"; // Add this line
 
     // Load background image
     const backgroundImage = new Image();
     backgroundImage.onload = function() {
         // Set the background image once it's loaded
-        document.getElementById("board").style.backgroundImage = "url('flappybirdbg.png')"; 
+        document.getElementById("board").style.backgroundImage = "url('flappybirdbg.png')";
         // Add event listeners after loading the background image
         document.removeEventListener("keydown", moveBird); // Remove existing event listeners
         document.getElementById("board").removeEventListener("touchstart", moveBirdTouch);
@@ -112,6 +125,51 @@ function startGame() {
     };
     backgroundImage.src = "./flappybirdbg.png";
 }
+
+
+// Function to render the bird on the canvas
+function renderBird() {
+    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+}
+
+// Function to move the bird
+function moveBird() {
+    // Move the bird up
+    bird.y -= 30; // Adjust this value as needed for desired jump height
+}
+
+// Function to handle bird jumping
+function jump() {
+    if (!gameOver) {
+        moveBird();
+    } else {
+        resetGame(); // Reset the game after game over
+    }
+}
+
+// Event listener for spacebar key to make the bird jump and start the game
+function moveBird(event) {
+    console.log("Key pressed: " + event.code);
+    if (event.code === "Space") { // Only respond to spacebar key
+        if (gameOver) {
+            restartGame(); // Restart the game if it's over
+        } else {
+            jump(); // Otherwise, make the bird jump
+        }
+    }
+}
+
+// Event listener for touch input to make the bird jump
+function moveBirdTouch(e) {
+    e.preventDefault(); // Prevent default touch behavior (like scrolling)
+    jump();
+}
+// Function to render the bird on the canvas
+function renderBird() {
+    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+}
+
+
 
 
 // Function to toggle the visibility of high scores display
@@ -164,35 +222,24 @@ function resetGame() {
     displayScores(); // Display high scores at the start of the game
 }
 
-// Function to save high scores and reset the game
-function saveHighScores() {
-    const playerName = document.getElementById("playerName").value.trim() || "Anonymous"; // Default name if not provided
-    highScores.push({ name: playerName, score: score });
-    highScores.sort((a, b) => b.score - a.score);
-    if (highScores.length > 10) {
-        highScores.pop();
-    }
-
-    localStorage.setItem("highScores", JSON.stringify(highScores));
-    console.log("Saved high scores to localStorage.");
-
-    displayScores();
-
-    // Reset the game and display start screen
-    resetGame();
-    document.getElementById("playerName").value = ""; // Clear input field after saving
-    document.getElementById("endScreen").style.display = "none"; // Hide end screen
-    document.getElementById("scoreBoard").style.display = "block"; // Show scoreboard
-    document.getElementById("startScreen").style.display = "flex"; // Show start screen
-    document.getElementById("gameScreen").style.display = "none"; // Hide game screen
-    document.getElementById("endScreen").innerHTML = ""; // Clear end screen content
-
-    console.log("Refreshing webpage after delay...");
-    // Delay before refreshing the webpage
-    setTimeout(() => {
-        location.reload(); // Refresh the webpage after a delay
-    }, 1000); // Adjust the delay time as needed (in milliseconds)
+// Function to save high scores to server
+function saveHighScoresToServer() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:3000/saveScores');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log('Scores saved successfully.');
+        } else {
+            console.error('Failed to save scores.');
+        }
+    };
+    xhr.send(JSON.stringify(highScores));
 }
+
+// Event listener for the save score button
+document.getElementById('saveScoreButton').addEventListener('click', saveHighScoresToServer);
+
 
 // Function to load high scores
 function loadHighScores() {
@@ -239,7 +286,6 @@ function detectCollision(a, b) {
         a.y < b.y + b.height &&
         a.y + a.height > b.y;
 }
-
 // Function to update game state
 function update() {
     console.log("update function called");
@@ -247,6 +293,7 @@ function update() {
     if (gameOver) {
         // Game over logic
         displayEndScores(); // Display high scores
+        document.getElementById("gameOverScreen").style.display = "flex";
         return;
     }
 
@@ -288,7 +335,7 @@ function update() {
 
     // Drawing logic
     context.clearRect(0, 0, board.width, board.height);
-    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+    renderBird(); // Render the bird
 
     // Drawing pipes
     for (let i = 0; i < pipeArray.length; i++) {
@@ -297,10 +344,13 @@ function update() {
     }
 
     // Drawing score
-    context.fillStyle = "white";
-    context.font = "20px sans-serif";
-    context.fillText(score, 10, 30);
+    if (!gameOver) {
+        context.fillStyle = "white";
+        context.font = "20px sans-serif";
+        context.fillText(score, 10, 30);
+    }
 }
+
 
 // Function to display high scores at the end of the game
 function displayEndScores() {
@@ -354,3 +404,16 @@ function placePipes() {
     };
     pipeArray.push(bottomPipe);
 }
+
+// Function to display the game over screen
+function displayGameOverScreen() {
+    document.getElementById("gameOverScreen").classList.remove("hidden");
+    document.getElementById("board").classList.add("hidden");
+}
+
+// Function to hide the game over screen
+function hideGameOverScreen() {
+    document.getElementById("gameOverScreen").classList.add("hidden");
+    document.getElementById("board").classList.remove("hidden");
+}
+

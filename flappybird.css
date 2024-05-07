@@ -2,17 +2,45 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    background-color: black;
 }
 
-#startScreen, #gameScreen, #endScreen {
-    display: none;
+.container {
+    display: flex;
     justify-content: center;
     align-items: center;
-    
+    height: 100vh;
+}
+
+#startScreen, #gameScreen {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+#endScreen {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2; /* Ensure end screen is above the game */
+    text-align: center;
+}
+
+#board.hidden {
+    display: none;
 }
 
 canvas {
-    border: 1px solid #000;
+    border: 2px solid black; /* Just for visualization, you can adjust or remove this */
+}
+
+
+
+.hidden {
+    display: none;
 }
 
 button {
@@ -28,15 +56,34 @@ input[type="text"] {
     margin-bottom: 10px;
 }
 
-#scoreBoard {
-    display: none;
-}
-
 #scoresDisplay {
     position: absolute;
     left: 50%;
-    top:20%;
+    top: 35%;
     transform: translate(-50%, -50%);
     z-index: 1; /* Ensure high scores display is above other elements */
     text-align: center;
+    color:white;
 }
+#gameOverScreen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width:65%;
+    height:15%; 
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1;
+}
+
+#saveScoreButton,
+#showScoresButton {
+    margin-top: 10px;
+    display: block;
+}
+
+
+
