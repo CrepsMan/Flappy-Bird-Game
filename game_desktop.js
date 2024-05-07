@@ -38,9 +38,6 @@ const pipeSpawnDelay = 120; // Adjust as needed
 
 // Function to initialize the game
 function initializeGame() {
-    // Load high scores
-    loadHighScores();
-
     // Initialize canvas and context
     board = document.getElementById("board");
     board.height = boardHeight;
@@ -78,20 +75,16 @@ function initializeGame() {
     document.getElementById("endScreen").style.display = "none";
     document.getElementById("scoresDisplay").style.display = "none"; // Ensure high scores are hidden initially
     document.getElementById("gameOverScreen").style.display = "none";
-    document.getElementById('saveScoreButton').addEventListener('click', saveScoresToServer);
     document.getElementById('showScoresButton').addEventListener('click', toggleScoresDisplay);
     document.getElementById('resetGameButton').addEventListener('click', resetGame);
-
-
-    // Add event listener for "Show High Scores" button click
-    const showScoresButton = document.getElementById("showScoresButton");
-    if (showScoresButton) {
-        showScoresButton.addEventListener("click", toggleScoresDisplay);
+    document.getElementById('saveScoreButton').addEventListener('click', saveScoresToServer);
+    // Check if the element exists before adding the event listener
+    const startButton = document.getElementById('startButton');
+    if (startButton) {
+        startButton.addEventListener('click', startGame);
     } else {
-        console.error("Element with ID 'showScoresButton' not found.");
+        console.error("Element with ID 'startButton' not found.");
     }
-
-    
 }
 
 // Function to reset the game
@@ -191,12 +184,40 @@ function toggleScoresDisplay() {
         scoresDisplay.style.display = displayStyle === "none" ? "block" : "none";
         const showScoresButton = document.getElementById("showScoresButton");
         if (showScoresButton) {
-            showScoresButton.textContent = displayStyle === "none" ? "Hide High Scores" : "Show High Scores";
+            if (displayStyle === "none") {
+                // Create the hide scores button
+                const hideScoresButton = document.createElement("button");
+                hideScoresButton.id = "hideScoresButton";
+                hideScoresButton.textContent = "Hide High Scores";
+                hideScoresButton.addEventListener("click", toggleScoresDisplay);
+
+                // Replace the show scores button with the hide scores button
+                showScoresButton.parentNode.insertBefore(hideScoresButton, showScoresButton.nextSibling);
+                showScoresButton.remove(); // Remove the show scores button
+            } else {
+                // Create the show scores button
+                const showScoresButton = document.createElement("button");
+                showScoresButton.id = "showScoresButton";
+                showScoresButton.textContent = "Show High Scores";
+                showScoresButton.addEventListener("click", toggleScoresDisplay);
+
+                // Replace the hide scores button with the show scores button
+                const hideScoresButton = document.getElementById("hideScoresButton");
+                hideScoresButton.parentNode.insertBefore(showScoresButton, hideScoresButton.nextSibling);
+                hideScoresButton.remove(); // Remove the hide scores button
+            }
         }
     } else {
         console.error("Element with ID 'scoresDisplay' not found.");
     }
 }
+
+
+
+
+
+
+
 
 // Initialize the game when the window loads
 window.onload = initializeGame;
@@ -225,7 +246,7 @@ function displayScores() {
 
 
 function saveScoresToServer(name, score) {
-    fetch('http://localhost:3000/saveScores', {
+    fetch('http://localhost:3000/saveScores', { // Change the URL to match your server
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -243,11 +264,8 @@ function saveScoresToServer(name, score) {
     });
 }
 
-
-
-// Function to load scores from the backend server
 function loadScoresFromServer() {
-    fetch('http://localhost:3000/loadScores')
+    fetch('http://localhost:3000/loadScores') // Change the URL to match your server
     .then(response => {
         if (!response.ok) {
             throw new Error('Failed to load scores');
@@ -262,39 +280,9 @@ function loadScoresFromServer() {
         console.error('Error loading scores:', error);
     });
 }
-
-// Example usage:
-// Call saveScoresToServer(score) when you want to save a score
-// Call loadScoresFromServer() when you want to load scores
-
-
 // Event listener for the save score button
 document.getElementById('saveScoreButton').addEventListener('click', saveHighScoresToServer);
 
-
-// Function to load high scores
-function loadHighScores() {
-    const storedScores = localStorage.getItem("highScores");
-    if (storedScores) {
-        highScores = JSON.parse(storedScores);
-    }
-    displayScores(); // Call displayScores after loading high scores
-}
-
-// Function to toggle the visibility of high scores display
-function toggleScoresDisplay() {
-    const scoresDisplay = document.getElementById("scoresDisplay");
-    if (scoresDisplay) {
-        const displayStyle = scoresDisplay.style.display;
-        scoresDisplay.style.display = displayStyle === "none" ? "block" : "none";
-        const showScoresButton = document.getElementById("showScoresButton");
-        if (showScoresButton) {
-            showScoresButton.textContent = displayStyle === "none" ? "Hide High Scores" : "Show High Scores";
-        }
-    } else {
-        console.error("Element with ID 'scoresDisplay' not found.");
-    }
-}
 
 // Event listener for spacebar key to make the bird jump and start the game
 function moveBird(event) {
