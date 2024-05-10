@@ -183,3 +183,47 @@ input[type="text"] {
     outline: none; /* Remove focus outline */
 }
 
+@media only screen and (max-width: 768px) {
+    /* Adjustments for phones */
+    #gameOverScreen {
+        width: auto; /* Adjusted width for better fit on phones */
+        height: auto; /* Allowing height to adjust dynamically based on content */
+        padding: 20px; /* Increased padding for better spacing */
+    }
+
+    button,
+    input[type="text"] {
+        padding: 8px 16px;
+        font-size: 16px;
+    }
+
+    #startButton,
+    #showScoresButton {
+        margin-top: 15px;
+        padding: 12px 24px;
+        font-size: 18px;
+    }
+}
+
+
+/* Media queries for iPads */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    /* Adjustments for iPads */
+    #gameOverScreen {
+        width: auto;
+        height: auto;
+    }
+
+    button,
+    input[type="text"] {
+        padding: 10px 20px;
+        font-size: 18px;
+    }
+
+    #startButton,
+    #showScoresButton {
+        margin-top: 20px;
+        padding: 15px 30px;
+        font-size: 20px;
+    }
+}

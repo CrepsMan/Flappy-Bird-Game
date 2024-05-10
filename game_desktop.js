@@ -36,7 +36,6 @@ let pipeSpawnCounter = 0;
 const pipeSpawnDelay = 120; // Adjust as needed
 document.getElementById("saveScoreButton").addEventListener("click", saveScoresToLocal);
 
-
 // Function to initialize the game
 function initializeGame() {
     // Initialize canvas and context
@@ -330,7 +329,7 @@ function moveBirdTouch(e) {
 // Function to handle bird jumping
 function jump() {
     if (!gameOver) {
-        velocityY = -6; // Adjusted jump velocity
+        velocityY = -7; // Adjusted jump velocity
     } else {
     }
 }
