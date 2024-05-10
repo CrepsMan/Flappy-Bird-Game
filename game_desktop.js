@@ -34,6 +34,7 @@ let score = 0;
 // Pipe spawn variables
 let pipeSpawnCounter = 0;
 const pipeSpawnDelay = 120; // Adjust as needed
+document.getElementById("saveScoreButton").addEventListener("click", saveScoresToLocal);
 
 
 // Function to initialize the game
@@ -75,17 +76,43 @@ function initializeGame() {
     document.getElementById("endScreen").style.display = "none";
     document.getElementById("scoresDisplay").style.display = "none"; // Ensure high scores are hidden initially
     document.getElementById("gameOverScreen").style.display = "none";
-    document.getElementById('showScoresButton').addEventListener('click', toggleScoresDisplay);
+    document.getElementById('showScoresButton').addEventListener('click', function() {
+        const scoresDisplay = document.getElementById('scoresDisplay');
+        if (scoresDisplay.style.display === 'none') {
+            // Show scores
+            scoresDisplay.style.display = 'block';
+            displayScores(); // Display scores when shown
+            // Replace show button with hide button
+            const showButton = document.getElementById('showScoresButton');
+            showButton.textContent = 'Hide High Scores';
+        } else {
+            // Hide scores
+            scoresDisplay.style.display = 'none';
+            // Replace hide button with show button
+            const showButton = document.getElementById('showScoresButton');
+            showButton.textContent = 'Show High Scores';
+        }
+    });
+    
     document.getElementById('resetGameButton').addEventListener('click', resetGame);
-    document.getElementById('saveScoreButton').addEventListener('click', saveScoresToServer);
-    // Check if the element exists before adding the event listener
+    document.getElementById('saveScoreButton').addEventListener('click', saveScoresToLocal);
     const startButton = document.getElementById('startButton');
     if (startButton) {
         startButton.addEventListener('click', startGame);
     } else {
         console.error("Element with ID 'startButton' not found.");
     }
+    const saveScoreButton = document.getElementById('saveScoreButton');
+    if (saveScoreButton) {
+        saveScoreButton.addEventListener('click', saveScoresToLocal);
+    } else {
+        console.error("Save score button not found.");
+    }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeGame();
+});
 
 // Function to reset the game
 function resetGame() {
@@ -93,7 +120,7 @@ function resetGame() {
     pipeArray = [];
     score = 0;
     gameOver = false;
-    velocityY = 0; // Reset jump velocity
+    velocityY = 0; // Reset bird's vertical velocity
     requestAnimationFrame(update);
     document.removeEventListener("keydown", moveBird);
     document.getElementById("board").removeEventListener("touchstart", moveBirdTouch);
@@ -143,153 +170,151 @@ function renderBird() {
     context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 }
 
-// Function to move the bird
-function moveBird() {
-    // Move the bird up
-    bird.y -= 30; // Adjust this value as needed for desired jump height
-}
-
-// Function to handle bird jumping
-function jump() {
-    if (!gameOver) {
-        moveBird();
-    } else {
-        resetGame(); // Reset the game after game over
-    }
-}
-
-// Event listener for spacebar key to make the bird jump and start the game
-function moveBird(event) {
-    console.log("Key pressed: " + event.code);
-    if (event.code === "Space") { // Only respond to spacebar key
-        if (gameOver) {
-            restartGame(); // Restart the game if it's over
-        } else {
-            jump(); // Otherwise, make the bird jump
-        }
-    }
-}
-
-// Event listener for touch input to make the bird jump
-function moveBirdTouch(e) {
-    e.preventDefault(); // Prevent default touch behavior (like scrolling)
-    jump();
-}
-
-// Function to toggle the visibility of high scores display
+// Function to toggle the visibility of high scores display and show/hide buttons
 function toggleScoresDisplay() {
     const scoresDisplay = document.getElementById("scoresDisplay");
-    if (scoresDisplay) {
-        const displayStyle = scoresDisplay.style.display;
-        scoresDisplay.style.display = displayStyle === "none" ? "block" : "none";
-        const showScoresButton = document.getElementById("showScoresButton");
-        if (showScoresButton) {
-            if (displayStyle === "none") {
-                // Create the hide scores button
-                const hideScoresButton = document.createElement("button");
-                hideScoresButton.id = "hideScoresButton";
-                hideScoresButton.textContent = "Hide High Scores";
-                hideScoresButton.addEventListener("click", toggleScoresDisplay);
-
-                // Replace the show scores button with the hide scores button
-                showScoresButton.parentNode.insertBefore(hideScoresButton, showScoresButton.nextSibling);
-                showScoresButton.remove(); // Remove the show scores button
-            } else {
-                // Create the show scores button
-                const showScoresButton = document.createElement("button");
-                showScoresButton.id = "showScoresButton";
-                showScoresButton.textContent = "Show High Scores";
-                showScoresButton.addEventListener("click", toggleScoresDisplay);
-
-                // Replace the hide scores button with the show scores button
-                const hideScoresButton = document.getElementById("hideScoresButton");
-                hideScoresButton.parentNode.insertBefore(showScoresButton, hideScoresButton.nextSibling);
-                hideScoresButton.remove(); // Remove the hide scores button
-            }
-        }
+    const hideScoresButton = document.getElementById("hideScoresButton");
+    const showScoresButton = document.getElementById("showScoresButton");
+    
+    if (scoresDisplay && hideScoresButton && showScoresButton) {
+        const isHidden = scoresDisplay.style.display === "none";
+        scoresDisplay.style.display = isHidden ? "block" : "none";
+        hideScoresButton.style.display = isHidden ? "none" : "block";
+        showScoresButton.style.display = isHidden ? "block" : "none";
     } else {
-        console.error("Element with ID 'scoresDisplay' not found.");
+        console.error("One or more elements not found.");
     }
 }
 
+// Event listener for the "Show High Scores" button
+document.getElementById('showScoresButton').addEventListener('click', toggleScoresDisplay);
 
+// Event listener for the "Hide High Scores" button
+document.getElementById('hideScoresButton').addEventListener('click', toggleScoresDisplay);
 
-
-
-
-
-
-// Initialize the game when the window loads
-window.onload = initializeGame;
-
+// Function to display scores
 function displayScores() {
-    const scoresDisplay = document.getElementById("scoresDisplay");
+    const scoresDisplay = document.getElementById("highScoresList");
     if (scoresDisplay) {
-        scoresDisplay.style.display = "block";
-        scoresDisplay.innerHTML = "";
+        scoresDisplay.innerHTML = ""; // Clear previous scores
 
-        // Sort scores in descending order
-        highScores.sort((a, b) => b.score - a.score);
+        // Retrieve high scores from local storage or initialize an empty array if not present
+        const existingScores = JSON.parse(localStorage.getItem("highScores")) || [];
+
+        // Sort scores in descending order based on score
+        existingScores.sort((a, b) => b.score - a.score);
 
         // Display only the top 10 scores
-        const topScores = highScores.slice(0, 10);
+        const topScores = existingScores.slice(0, 10);
 
         topScores.forEach((entry, index) => {
             const li = document.createElement("li");
             li.textContent = entry.name + ": " + entry.score;
             scoresDisplay.appendChild(li);
         });
+
+        // Show the scores display
+        document.getElementById("scoresDisplay").style.display = "block";
     } else {
-        console.error("Element with ID 'scoresDisplay' not found.");
+        console.error("Element with ID 'highScoresList' not found.");
     }
 }
 
 
-function saveScoresToServer(name, score) {
-    fetch('http://localhost:3000/saveScores', { // Change the URL to match your server
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: name, score: score }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to save score');
-        }
-        console.log('Score saved successfully');
-    })
-    .catch(error => {
-        console.error('Error saving score:', error);
-    });
+function saveScore() {
+    const playerName = prompt("Enter your name:");
+    if (playerName !== null) { // Check if the user entered a name or canceled the prompt
+        const playerScore = score; // Assuming you have a variable named 'score' storing the current score
+        const scoreEntry = { name: playerName, score: playerScore };
+
+        // Retrieve existing scores from local storage or initialize an empty array
+        const existingScores = JSON.parse(localStorage.getItem("highScores")) || [];
+
+        // Add the new score entry to the array
+        existingScores.push(scoreEntry);
+
+        // Sort the scores array in descending order based on score
+        existingScores.sort((a, b) => b.score - a.score);
+
+        // Store the updated scores array back to local storage
+        localStorage.setItem("highScores", JSON.stringify(existingScores));
+
+        // Optionally, display a confirmation message
+        alert("Score saved successfully!");
+
+        // Update the high scores display
+        displayScores();
+    }
 }
 
-function loadScoresFromServer() {
-    fetch('http://localhost:3000/loadScores') // Change the URL to match your server
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to load scores');
-        }
-        return response.json();
-    })
-    .then(scores => {
-        console.log('Scores loaded successfully:', scores);
-        // Handle loading scores into your game interface
-    })
-    .catch(error => {
-        console.error('Error loading scores:', error);
-    });
-}
-// Event listener for the save score button
-document.getElementById('saveScoreButton').addEventListener('click', saveHighScoresToServer);
+function saveScoresToLocal() {
+    console.log("saveScoresToLocal() function called");
+    
+    const playerNameInput = document.getElementById("playerName");
+    const playerName = playerNameInput.value.trim(); // Retrieve the player's name from the input field
 
+    console.log("Player name:", playerName);
+
+    if (!playerName) {
+        alert("Please enter your name.");
+        return; // Exit the function if the player's name is not provided
+    }
+
+    // Assuming you have a variable named 'score' storing the current score
+    if (score > 0) { // Check if the score is greater than 0
+        // Create an object with name and score
+        const scoreEntry = { 
+            name: playerName,
+            score: score
+        };
+
+        console.log("Score entry:", scoreEntry);
+
+        // Retrieve existing scores from local storage or initialize an empty array
+        const existingScores = JSON.parse(localStorage.getItem("highScores")) || [];
+
+        console.log("Existing scores:", existingScores);
+
+        // Add the new score entry to the array
+        existingScores.push(scoreEntry);
+
+        console.log("Updated scores:", existingScores);
+
+        // Sort the scores array in descending order based on score
+        existingScores.sort((a, b) => b.score - a.score);
+
+        console.log("Sorted scores:", existingScores);
+
+        // Store the updated scores array back to local storage
+        localStorage.setItem("highScores", JSON.stringify(existingScores));
+
+        console.log("Scores saved to local storage");
+
+        // Optionally, display a confirmation message
+        alert("Score saved successfully!");
+
+        // Restart the game after saving the score
+        restartGame();
+    } else {
+        console.error("Score is zero.");
+    }
+}
+
+
+// Function to load scores from local storage
+function loadScoresFromLocal() {
+    const storedScores = localStorage.getItem("flappyBirdHighScores");
+    if (storedScores) {
+        highScores = JSON.parse(storedScores);
+        displayScores(); // Display loaded scores
+    }
+}
 
 // Event listener for spacebar key to make the bird jump and start the game
 function moveBird(event) {
     console.log("Key pressed: " + event.code);
     if (event.code === "Space") { // Only respond to spacebar key
         if (gameOver) {
-            restartGame(); // Restart the game if it's over
         } else {
             jump(); // Otherwise, make the bird jump
         }
@@ -307,7 +332,6 @@ function jump() {
     if (!gameOver) {
         velocityY = -6; // Adjusted jump velocity
     } else {
-        resetGame(); // Reset the game after game over
     }
 }
 
@@ -409,7 +433,7 @@ function displayEndScores() {
 // Function to restart the game
 function restartGame() {
     document.getElementById("endScreen").style.display = "none";
-    resetGame();
+    window.location.href = 'index.html'; // Replace 'index.html' with the actual filename of your start screen
     startGame();
 }
 
@@ -455,3 +479,5 @@ function hideGameOverScreen() {
     document.getElementById("board").classList.remove("hidden");
 }
 
+// Load scores from local storage when the page is loaded
+window.addEventListener("load", loadScoresFromLocal);

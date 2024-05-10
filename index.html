@@ -22,10 +22,15 @@
     <div id="gameOverScreen" class="hidden">
         <h1>Game Over</h1>
         <p>Your Score: <span id="finalScore">0</span></p>
-        <button id="restartButton">Restart</button>
-        <button id="saveScoreButton">Save Score</button>
-        <button id="showScoresButton">Show High Scores</button>
+        <input type="text" id="playerName" placeholder="Enter your name">
+        <div id="buttonContainer">
+            <button id="restartButton">Restart</button>
+            <button id="saveScoreButton">Save Score</button>
+        </div>
     </div>
+    
+    
+    
     <div id="scoreBoard" class="hidden">
         <span id="score">0</span>
     </div>
@@ -34,14 +39,16 @@
     <div id="endScreen" style="display: none;">
         
     </div>
-
-
     <div id="scoresDisplay" style="display: none;">
         <!-- High scores list -->
         <h2>High Scores</h2>
         <ul id="highScoresList"></ul>
     </div>
+    
 
     <script src="game_desktop.js"></script>
+    <script>
+        document.getElementById('restartButton').addEventListener('click', restartGame)
+    </script>
 </body>
 </html>
