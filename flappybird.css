@@ -27,7 +27,7 @@ body {
     transform: translate(-50%, -50%);
     z-index: 2; /* Ensure end screen is above the game */
     text-align: center;
-    hight: 70%;
+    hight: 80%;
 }
 
 #board.hidden {
