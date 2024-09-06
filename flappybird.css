@@ -147,6 +147,16 @@ input[type="text"] {
     width:100px;
 }
 
+#scoresDisplay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; /* Ensure high scores display is above other elements */
+    text-align: center;
+    color: white;
+}
+
 #gameOverScreen button:hover {
     background-color: #0056b3;
 }
