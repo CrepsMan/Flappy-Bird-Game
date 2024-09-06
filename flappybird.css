@@ -69,7 +69,7 @@ input[type="text"] {
     top: 50%;
     left: 50%;
     width:65%;
-    height:15%; 
+    height:20%; 
     transform: translate(-50%, -50%);
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
