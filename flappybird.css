@@ -58,7 +58,7 @@ input[type="text"] {
 #scoresDisplay {
     position: absolute;
     left: 50%;
-    top: 35%;
+    top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1; /* Ensure high scores display is above other elements */
     text-align: center;
